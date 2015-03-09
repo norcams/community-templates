@@ -1,0 +1,29 @@
+<%#
+kind: ptable
+name: Kickstart default
+oses:
+- CentOS 5
+- CentOS 6
+- CentOS 7
+- Fedora 16
+- Fedora 17
+- Fedora 18
+- Fedora 19
+- Fedora 20
+- RedHat 5
+- RedHat 6
+- RedHat 7
+%>
+zerombr
+<% if @host.params['installdevice'] -%>
+  clearpart --all --initlabel
+  part /boot --fstype xfs --size=512 --asprimary
+  part pv.<%=@host.params['installdevice'] %> --ondisk=<%=@host.params['installdevice'] %> --size=1 --grow --asprimary
+  volgroup vg_root pv.<%=@host.params['installdevice'] %>
+    logvol / --name=lv_root --vgname=vg_root --fstype=xfs --size=1024 --grow
+    logvol swap --name=lv_swap --vgname=vg_root --size=4096
+<% else -%>
+  clearpart --all --initlabel
+  autopart
+<% end -%>
+
