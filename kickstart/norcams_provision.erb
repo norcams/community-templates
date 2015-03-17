@@ -167,7 +167,7 @@ HWADDR=\"$ifhwaddr\"" > /etc/sysconfig/network-scripts/ifcfg-$ifdevice
 fi
 
 # **** Wipe disk labels on the non-boot disks
-<% if @host.params['installdevice'] -%>
+<% if @host.params['installdevice'] and != @host.params['keepdevices'] -%>
 disks=$(cat /proc/partitions | grep 'sd\|hd' | awk '{print $4}' | grep -v '[0-9]')
 for i in $disks; do
   if [ $i != @host.params['installdevice'] ]; then
