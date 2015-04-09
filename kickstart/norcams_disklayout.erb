@@ -14,20 +14,17 @@ oses:
 - RedHat 6
 - RedHat 7
 %>
+<%
+  installdevice = @host.params['installdevice'] ? "@host.params['installdevice']"             : 'sda'
+  ondisk        = @host.params['installdevice'] ? "--ondisk=<%=@host.params['installdevice']" : ''
+  clear_drives  = @host.params['keepdevices']   ? "--drives=<%=@host.params['installdevice']" : ''
+%>
+
 zerombr
-<% if @host.params['installdevice'] -%>
-  <% if @host.params['keepdevices'] -%>
-    clearpart --all --initlabel --drives=<%=@host.params['installdevice'] %>
-  <% else -%>
-    clearpart --all --initlabel
-  <% end -%>
-  part /boot --fstype xfs --size=512 --asprimary
-  part pv.<%=@host.params['installdevice'] %> --ondisk=<%=@host.params['installdevice'] %> --size=1 --grow --asprimary
-  volgroup vg_root pv.<%=@host.params['installdevice'] %>
-    logvol / --name=lv_root --vgname=vg_root --fstype=xfs --size=8900
-    logvol swap --name=lv_swap --vgname=vg_root --size=256
-<% else -%>
-  clearpart --all --initlabel
-  autopart
-<% end -%>
+clearpart --all --initlabel <%= clear_drives %>
+part /boot --fstype=xfs --size=512 --asprimary
+part pv.<%= installdevice %> <%= ondisk %> --size=1 --grow --asprimary
+volgroup vg_root pv.<%= installdevice %>
+  logvol swap --name=lv_swap --vgname=vg_root --size=256
+  logvol /    --name=lv_root --vgname=vg_root --fstype=xfs --size=1 --grow --maxsize=10240
 
