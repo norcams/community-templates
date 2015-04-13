@@ -15,13 +15,13 @@ oses:
 - RedHat 7
 %>
 <%
-  installdevice = @host.params['installdevice'] ? "@host.params['installdevice']"             : 'sda'
-  ondisk        = @host.params['installdevice'] ? "--ondisk=<%=@host.params['installdevice']" : ''
-  clear_drives  = @host.params['keepdevices']   ? "--drives=<%=@host.params['installdevice']" : ''
+  installdevice = @host.params['installdevice'] ? @host.params['installdevice']               : 'default'
+  ondisk        = @host.params['installdevice'] ? "--ondisk=#{@host.params['installdevice']}" : ''
+  clear_osdisk  = @host.params['keepdevices']   ? "--drives=#{@host.params['installdevice']}" : ''
 %>
 
 zerombr
-clearpart --all --initlabel <%= clear_drives %>
+clearpart --all --initlabel <%= clear_osdisk %>
 part /boot --fstype=xfs --size=512 --asprimary
 part pv.<%= installdevice %> <%= ondisk %> --size=1 --grow --asprimary
 volgroup vg_root pv.<%= installdevice %>
