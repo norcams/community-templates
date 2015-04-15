@@ -190,6 +190,8 @@ done
 yum -t -y -e 0 update
 
 <% if puppet_enabled %>
+echo "Installing libnetcf-ruby"
+yum -y install http://folk.uio.no/beddari/libnetcf-ruby-0.0.2-1.x86_64.rpm
 echo "Configuring puppet"
 cat > /etc/puppet/puppet.conf << EOF
 <%= snippet 'puppet.conf' %>
@@ -198,7 +200,7 @@ EOF
 # Setup puppet to run on system reboot
 /sbin/chkconfig --level 345 puppet on
 
-/usr/bin/puppet agent --config /etc/puppet/puppet.conf -o --tags no_such_tag <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
+FACTER_runmode=bootstrap /usr/bin/puppet agent --config /etc/puppet/puppet.conf -o <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
 <% end -%>
 
 <% if salt_enabled %>
