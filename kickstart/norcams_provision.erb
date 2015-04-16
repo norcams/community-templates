@@ -200,7 +200,7 @@ EOF
 # Setup puppet to run on system reboot
 /sbin/chkconfig --level 345 puppet on
 
-FACTER_runmode=bootstrap /usr/bin/puppet agent --config /etc/puppet/puppet.conf -o <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
+FACTER_runmode=bootstrap /usr/bin/puppet agent --verbose --show_diff --config /etc/puppet/puppet.conf -o <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
 <% end -%>
 
 <% if salt_enabled %>
