@@ -198,9 +198,16 @@ cat > /etc/puppet/puppet.conf << EOF
 EOF
 
 # Setup puppet to run on system reboot
-/sbin/chkconfig --level 345 puppet on
+#/sbin/chkconfig --level 345 puppet on
 
-FACTER_runmode=bootstrap /usr/bin/puppet agent --verbose --show_diff --config /etc/puppet/puppet.conf -o <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
+FACTER_runmode=bootstrap /usr/bin/puppet agent --verbose --show_diff \
+  --certname <%= @host %> \
+  --disable_warnings=deprecations \
+  --trusted_node_data \
+  --no-stringify-facts \
+  --onetime \
+  --no-daemonize \
+  <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %>
 <% end -%>
 
 <% if salt_enabled %>
