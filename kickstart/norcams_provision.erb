@@ -204,7 +204,7 @@ FACTER_runmode=bootstrap /usr/bin/puppet agent --verbose --show_diff \
   --certname <%= @host %> \
   --disable_warnings=deprecations \
   --trusted_node_data \
-  --no-stringify-facts \
+  --no-stringify_facts \
   --onetime \
   --no-daemonize \
   <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %>
