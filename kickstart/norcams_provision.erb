@@ -210,6 +210,9 @@ FACTER_runmode=bootstrap /usr/bin/puppet agent --verbose --show_diff \
   <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %>
 <% end -%>
 
+# update all packages after installing custom repos
+yum -t -y -e 0 update
+
 <% if salt_enabled %>
 cat > /etc/salt/minion << EOF
 <%= snippet 'saltstack_minion' %>
