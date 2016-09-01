@@ -200,7 +200,7 @@ EOF
 # Setup puppet to run on system reboot
 #/sbin/chkconfig --level 345 puppet on
 
-FACTER_runmode=bootstrap /usr/bin/puppet agent --verbose --show_diff \
+FACTER_runmode=kickstart /usr/bin/puppet agent --verbose --show_diff \
   --certname <%= @host %> \
   --disable_warnings=deprecations \
   --trusted_node_data \
@@ -222,6 +222,31 @@ EOF
 # Running salt-call to trigger key signing
 salt-call --no-color --grains >/dev/null
 <% end -%>
+
+## Create Systemd Service for puppet firstboot run
+cat > /etc/systemd/system/puppetrun_firstboot.service << EOFSYSTEMD
+[Unit]
+Description=Run puppet on first boot
+After=network.service
+
+[Service]
+Type=oneshot
+Environment=FACTER_RUNMODE=bootstrap
+ExecStart=/bin/puppet agent -t
+ExecStartPost=/bin/systemctl disable puppetrun_firstboot.service
+RemainAfterExit=no
+StandardOutput=syslog
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+EOFSYSTEMD
+
+# Make sure that Systemd Service will be enabled during the next boot
+ln -sf '/etc/systemd/system/puppetrun_firstboot.service' '/etc/systemd/system/multi-user.target.wants/puppetrun_firstboot.service'
+
+## EO Create Systemd Service for puppet firstboot run
 
 sync
 
