@@ -190,8 +190,6 @@ done
 yum -t -y -e 0 update
 
 <% if puppet_enabled %>
-echo "Installing libnetcf-ruby"
-yum -y install http://folk.uio.no/beddari/libnetcf-ruby-0.0.2-1.x86_64.rpm
 echo "Configuring puppet"
 cat > /etc/puppet/puppet.conf << EOF
 <%= snippet 'puppet.conf' %>
