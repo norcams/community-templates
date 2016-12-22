@@ -168,9 +168,10 @@ fi
 
 # **** Wipe disk labels on the non-boot disks
 <% if @host.params['installdevice'] and !@host.params['keepdevices'] -%>
+export idevice=<%= @host.params['installdevice'] %>
 disks=$(cat /proc/partitions | grep 'sd\|hd' | awk '{print $4}' | grep -v '[0-9]')
 for i in $disks; do
-  if [ $i != @host.params['installdevice'] ]; then
+  if [ $i != $idevice ]; then
     /bin/dd if=/dev/zero of=/dev/$i bs=512 count=2
     /sbin/pvcreate --yes /dev/$i 
     /sbin/pvremove --yes /dev/$i 
