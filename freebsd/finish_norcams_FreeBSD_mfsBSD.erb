@@ -30,6 +30,7 @@ ntpdate <%= @host.params['ntp-server'] || '0.freebsd.pool.ntp.org' %>
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
 
 <% if puppet_enabled %>
+ntpd -g -q
 pkg install -y puppet38
 echo 'puppet_enable="YES"' >>/etc/rc.conf
 cat > /usr/local/etc/puppet/puppet.conf << EOF
