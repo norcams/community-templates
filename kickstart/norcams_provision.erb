@@ -32,7 +32,7 @@ keyboard us
 skipx
 network --bootproto <%= @static ? "static --ip=#{@host.ip} --netmask=#{@host.subnet.mask} --gateway=#{@host.subnet.gateway} --nameserver=#{[@host.subnet.dns_primary,@host.subnet.dns_secondary].reject{|n| n.blank?}.join(',')}" : 'dhcp' %> --hostname <%= @host %>
 rootpw --iscrypted <%= root_pass %>
-firewall --<%= os_major >= 6 ? 'service=' : '' %>ssh
+firewall --disable
 authconfig --useshadow --passalgo=sha256 --kickstart
 timezone --utc <%= @host.params['time-zone'] || 'UTC' %>
 <% if rhel_compatible && os_major > 4 -%>
@@ -133,7 +133,7 @@ mkdir -p /etc/udev/rules.d/60-net.rules
 <% end -%>
 
 # **** Configure additional network interfaces as defined in "enable-addifs" parameter
-# **** The last IP byte for these interfaces will be the same as for the primary interface 
+# **** The last IP byte for these interfaces will be the same as for the primary interface
 # **** Format for this parameter is interfacename1_network/prefix:interfacename2_network/prefix etc
 # **** example: eth1_172.16.44.0/24:eth2_192.168.0.0/21
 
@@ -173,8 +173,8 @@ disks=$(cat /proc/partitions | grep 'sd\|hd' | awk '{print $4}' | grep -v '[0-9]
 for i in $disks; do
   if [ $i != $idevice ]; then
     /bin/dd if=/dev/zero of=/dev/$i bs=512 count=2
-    /sbin/pvcreate --yes /dev/$i 
-    /sbin/pvremove --yes /dev/$i 
+    /sbin/pvcreate --yes /dev/$i
+    /sbin/pvremove --yes /dev/$i
   fi
 done
 <% end -%>
@@ -232,20 +232,16 @@ After=network.service
 [Service]
 Type=oneshot
 Environment=FACTER_RUNMODE=bootstrap
-ExecStart=/bin/puppet agent -t
+ExecStart=-/bin/puppet agent -t
 ExecStartPost=/bin/systemctl disable puppetrun_firstboot.service
-RemainAfterExit=no
-StandardOutput=syslog
-User=root
-Group=root
 
 [Install]
 WantedBy=multi-user.target
 EOFSYSTEMD
 
 # Make sure that Systemd Service will be enabled during the next boot
-ln -sf '/etc/systemd/system/puppetrun_firstboot.service' '/etc/systemd/system/multi-user.target.wants/puppetrun_firstboot.service'
-
+/bin/systemctl daemon-reload
+/bin/systemctl enable puppetrun_firstboot.service
 ## EO Create Systemd Service for puppet firstboot run
 
 sync
