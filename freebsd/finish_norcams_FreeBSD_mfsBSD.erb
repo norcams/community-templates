@@ -37,7 +37,15 @@ cat > /usr/local/etc/puppet/puppet.conf << EOF
 <%= snippet 'puppet.conf' %>
 EOF
 
+echo 'pkg_env: {
+  http_proxy: "http://172.28.0.12:8888",
+  https_proxy: "172.28.0.12:8888",
+}' >> /usr/local/etc/pkg.conf
+
 /usr/local/bin/puppet agent --config /usr/local/etc/puppet/puppet.conf --onetime --tags no_such_tag <%= @host.puppetmaster.blank? ? '' : "--server #{@host.puppetmaster}" %> --no-daemonize
+FACTER_RUNMODE="kickstart"
+export FACTER_RUNMODE
+/usr/local/bin/puppet agent -t
 <% end -%>
 
 <% if salt_enabled %>
