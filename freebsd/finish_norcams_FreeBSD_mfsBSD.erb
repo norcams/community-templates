@@ -31,7 +31,8 @@ env ASSUME_ALWAYS_YES=YES pkg bootstrap
 
 <% if puppet_enabled %>
 ntpd -g -q
-pkg install -y puppet38
+pkg add -M https://download.iaas.uio.no/uh-iaas/ports/puppet38-3.8.7_1.txz
+pkg check -d -y
 echo 'puppet_enable="YES"' >>/etc/rc.conf
 cat > /usr/local/etc/puppet/puppet.conf << EOF
 <%= snippet 'puppet.conf' %>
