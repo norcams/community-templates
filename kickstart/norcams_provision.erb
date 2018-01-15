@@ -43,6 +43,7 @@ services --disabled gpm,sendmail,cups,pcmcia,isdn,rawdevices,hpoj,bluetooth,open
 realm join --one-time-password='<%= @host.otp %>' <%= @host.realm %>
 <% end -%>
 
+<% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
 # Bootloader exception for Fedora 16:
 bootloader --append="nofb quiet splash=quiet <%=ks_console%>" <%= grub_pass %>
 part biosboot --fstype=biosboot --size=1
