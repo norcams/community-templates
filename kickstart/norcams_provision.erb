@@ -43,13 +43,6 @@ services --disabled gpm,sendmail,cups,pcmcia,isdn,rawdevices,hpoj,bluetooth,open
 realm join --one-time-password='<%= @host.otp %>' <%= @host.realm %>
 <% end -%>
 
-<% if @host.operatingsystem.name == 'Fedora' -%>
-repo --name=fedora-everything --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=fedora-<%= @host.operatingsystem.major %>&arch=<%= @host.architecture %><%= proxy_string %>
-<% elsif rhel_compatible && os_major > 4 -%>
-repo --name="EPEL" --mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-<%= @host.operatingsystem.major %>&arch=<%= @host.architecture %><%= proxy_string %>
-<% end -%>
-
-<% if @host.operatingsystem.name == 'Fedora' and os_major <= 16 -%>
 # Bootloader exception for Fedora 16:
 bootloader --append="nofb quiet splash=quiet <%=ks_console%>" <%= grub_pass %>
 part biosboot --fstype=biosboot --size=1
@@ -73,9 +66,6 @@ ntp
 wget
 net-tools
 @Core
-<% if rhel_compatible && os_major > 4 -%>
-epel-release
-<% end -%>
 <% if salt_enabled %>
 salt-minion
 <% end -%>
