@@ -1,6 +1,6 @@
 <%#
 kind: PXELinux
-name: Kickstart default PXELinux
+name: kickstart_default
 model: ProvisioningTemplate
 oses:
 - CentOS
@@ -15,7 +15,7 @@ oses:
 
   # Tell Anaconda to perform network functions with boot interface
   #  both current and legacy syntax provided
-  options = ["network", "ksdevice=bootif", "ks.device=bootif"]
+  options = ["network", "ksdevice=bootif", "ks.device=bootif", "net.ifnames=0"]
   if mac
     bootif = '00-' + mac.gsub(':', '-')
     options.push("BOOTIF=#{bootif}")
