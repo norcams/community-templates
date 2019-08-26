@@ -222,8 +222,8 @@ echo "Updating system time"
 echo 'proxy = <%= proxy_uri %>' >> /etc/yum.conf
 <% end -%>
 
-<% if rhel_compatible && !host_param_false?('enable-epel') -%>
-<%= snippet 'epel' -%>
+<% if rhel_compatible && !host_param_false?('enable-epel') || !host_param_false?('enable-norcams-epel') -%>
+<%= snippet 'norcams epel' -%>
 <% end -%>
 
 <%= snippet 'redhat_register' %>
@@ -250,7 +250,7 @@ fi
 <% end -%>
 
 <% if puppet_enabled %>
-<% if host_param_true?('enable-puppetlabs-pc1-repo') || host_param_true?('enable-puppetlabs-repo') || host_param_true?('enable-puppetlabs-puppet5-repo') -%>
+<% if host_param_true?('enable-puppetlabs-pc1-repo') || host_param_true?('enable-puppetlabs-repo') || host_param_true?('enable-puppetlabs-puppet5-repo') || host_param_true?('enable-norcams-repo')-%>
 <%= snippet 'puppetlabs_repo' %>
 <% end -%>
 <%= snippet 'puppet_setup' %>
