@@ -4,8 +4,10 @@ name: Kickstart default
 model: Ptable
 oses:
 - CentOS
-- Fedora
-- RedHat
+locations:
+- Default Location
+organizations:
+- Default Organization
 %>
 <%
   installdevice = host_param('installdevice') ? host_param('installdevice') : 'default'

@@ -3,6 +3,10 @@ kind: snippet
 name: puppetlabs_repo
 model: ProvisioningTemplate
 snippet: true
+locations:
+- Default Location
+organizations:
+- Default Organization
 -%>
 <%
 http_proxy   = host_param('http-proxy') ? " --httpproxy #{host_param('http-proxy')}" : nil
