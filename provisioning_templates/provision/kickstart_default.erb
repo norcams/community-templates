@@ -236,15 +236,6 @@ echo 'proxy = <%= proxy_uri %>' >> /etc/yum.conf
 <%= snippet 'freeipa_register' %>
 <% end -%>
 
-<% unless host_param_false?('package_upgrade') -%>
-# update all the base packages from the updates repository
-if [ -f /usr/bin/dnf ]; then
-  dnf -y update
-else
-  yum -t -y update
-fi
-<% end -%>
-
 <%= snippet('remote_execution_ssh_keys') %>
 
 <%= snippet "blacklist_kernel_modules" %>
@@ -271,6 +262,15 @@ sed -e 's/DEFAULTKERNEL=kernel-uek/DEFAULTKERNEL=kernel/g' -i /etc/sysconfig/ker
 <% end -%>
 
 <%= snippet('ansible_provisioning_callback') %>
+
+<% unless host_param_false?('package_upgrade') -%>
+# update all the base packages from the updates repository
+if [ -f /usr/bin/dnf ]; then
+  dnf -y update
+else
+  yum -t -y update
+fi
+<% end -%>
 
 <%= snippet 'efibootmgr_netboot' %>
 
