@@ -162,4 +162,24 @@ export FACTER_is_installer=true
 <% if @host.provision_method == 'image' -%>
 <%= bin_path %>/puppet resource service puppet ensure=running
 <% end -%>
+<% if host_param_true?('puppet_systemd_firstboot') -%>
+cat > /etc/systemd/system/puppetrun_firstboot.service << EOFSYSTEMD
+[Unit]
+Description=Run puppet on first boot
+After=network.service
+
+[Service]
+Type=oneshot
+Environment=FACTER_RUNMODE=bootstrap
+ExecStart=<%= bin_path %>/puppet agent -t
+ExecStartPost=/bin/systemctl disable puppetrun_firstboot.service
+
+[Install]
+WantedBy=multi-user.target
+EOFSYSTEMD
+
+# Make sure that Systemd Service will be enabled during the next boot
+/bin/systemctl daemon-reload
+/bin/systemctl enable puppetrun_firstboot.service
+<% end -%>
 <% end -%>
