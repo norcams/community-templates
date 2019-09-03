@@ -22,8 +22,6 @@ baseurl=https://download.iaas.uio.no/uh-iaas/prod/epel
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
-exclude=zeromq python2-uritemplate python2-google-api-client
-includepkgs=tinyproxy htop bash-completion-extras jq oniguruma
 EOF
 <% else % -%>
 rpm -Uvh<%= http_proxy %><%= http_port %> <%= repo_base %>/epel-release-latest-<%= os_major %>.noarch.rpm
