@@ -10,12 +10,14 @@ oses:
 # This file was deployed via '<%= template_name %>' template
 
 <%
+  ifnames          = host_param('ifnames') ? host_param('ifnames') : "0"
+
   major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
 
   # Tell Anaconda to perform network functions with boot interface
   #  both current and legacy syntax provided
-  options = ["network", "ksdevice=bootif", "ks.device=bootif", "net.ifnames=0"]
+  options = ["network", "ksdevice=bootif", "ks.device=bootif", "net.ifnames=#{ifnames}"]
   if mac
     bootif = '00-' + mac.gsub(':', '-')
     options.push("BOOTIF=#{bootif}")
