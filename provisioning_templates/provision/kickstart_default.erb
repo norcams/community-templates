@@ -34,6 +34,7 @@ This template accepts the following parameters:
 - fips_enabled: boolean (default=false)
 %>
 <%
+  ifnames = host_param('ifnames') ? host_param('ifnames') : "0"
   rhel_compatible = @host.operatingsystem.family == 'Redhat' && @host.operatingsystem.name != 'Fedora'
   is_fedora = @host.operatingsystem.name == 'Fedora'
   os_major = @host.operatingsystem.major.to_i
@@ -155,6 +156,7 @@ chrony
 <% end -%>
 wget
 pciutils
+net-tools
 @Core
 <% if os_major >= 6 -%>
 redhat-lsb-core
@@ -196,8 +198,8 @@ exec < /dev/tty3 > /dev/tty3
 /usr/bin/chvt 3
 
 
-# Override udev net-rules on el7
-<% if @host.operatingsystem.family == 'Redhat' and @host.operatingsystem.major.to_i >= 7 -%>
+# Override udev net-rules on el7 if ifnames not set
+<% if @host.operatingsystem.family == 'Redhat' and @host.operatingsystem.major.to_i >= 7 and ifnames == "0" -%>
 mkdir -p /etc/udev/rules.d/60-net.rules
 # Add "net.ifnames=0"
 /usr/bin/sed -i -e 's/quiet/net.ifnames=0 quiet/' /etc/default/grub
