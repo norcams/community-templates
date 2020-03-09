@@ -10,7 +10,7 @@ oses:
 # This file was deployed via '<%= template_name %>' template
 
 <%
-  ifnames          = host_param('ifnames') ? host_param('ifnames') : "0"
+  ifnames = host_param('ifnames') ? host_param('ifnames') : "0"
 
   major = @host.operatingsystem.major.to_i
   mac = @host.provision_interface.mac
