@@ -199,10 +199,10 @@ exec < /dev/tty3 > /dev/tty3
 
 
 # Override udev net-rules on el7 if ifnames not set
-<% if @host.operatingsystem.family == 'Redhat' and @host.operatingsystem.major.to_i >= 7 and ifnames == "0" -%>
+<% if @host.operatingsystem.family == 'Redhat' and @host.operatingsystem.major.to_i >= 7 -%>
 mkdir -p /etc/udev/rules.d/60-net.rules
 # Add "net.ifnames=0"
-/usr/bin/sed -i -e 's/quiet/net.ifnames=0 quiet/' /etc/default/grub
+/usr/bin/sed -i -e 's/quiet/net.ifnames=<%= ifnames %> quiet/' /etc/default/grub
 /usr/sbin/grub2-mkconfig -o /boot/grub2/grub.cfg
 <% end -%>
 
