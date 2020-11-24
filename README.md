@@ -1,3 +1,11 @@
+# DEFUNCT - DO NOT USE!!!!
+
+The 'community templates' concept is deprecated! All templates we need to adapt are now synced from
+the repository [foreman-templates](https://github.com/norcams/foreman-templates). Please make any
+alterations you need in there instead!
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 # Community Templates
 
 A place for us to collaborate around templates & snippets for various OSes.
