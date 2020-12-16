@@ -13,12 +13,13 @@ repo_base  = host_param('epel-repo-base') ? host_param('epel-repo-base') : 'http
 http_proxy = host_param('http-proxy') ? " --httpproxy #{host_param('http-proxy')}" : nil
 http_port  = host_param('http-proxy-port') ? " --httpport #{host_param('http-proxy-port')}" : nil
 os_major   = @host.operatingsystem.major.to_i
+environment = host_param('environment') ? host_param('environment') : 'prod'
 -%>
 <% if host_param_true?('enable-norcams-epel') -%>
 cat > /etc/yum.repos.d/epel.repo << EOF
 [epel]
 name=Extra Packages for Enterprise Linux 7 - $basearch
-baseurl=https://download.iaas.uio.no/uh-iaas/prod/epel
+baseurl=https://download.iaas.uio.no/uh-iaas/<%= environment %>/epel
 enabled=1
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7

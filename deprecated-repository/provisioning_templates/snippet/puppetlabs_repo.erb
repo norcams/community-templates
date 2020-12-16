@@ -47,17 +47,18 @@ elsif host_param_true?('enable-norcams-repo')
 end
 
 repo_subdir = host_param_true?('enable-puppetlabs-puppet5-repo') ? 'puppet5/' : ''
+environment = host_param('environment') ? host_param('environment') : 'prod'
 -%>
 
 <% if repo_name -%>
 <% if os_family == 'Redhat' || os_name == 'SLES' -%>
 <% if host_param_true?('enable-norcams-repo') -%>
-rpm --import https://iaas-repo.uio.no/uh-iaas/prod/<%= repo_name %>/RPM-GPG-KEY-puppetlabs
+rpm --import https://iaas-repo.uio.no/uh-iaas/<%= environment %>/<%= repo_name %>/RPM-GPG-KEY-puppetlabs
 cat > /etc/yum.repos.d/puppetlabs.repo << EOF
 [puppetlabs]
 name=Puppetlabs Yum Repo
-baseurl=https://iaas-repo.uio.no/uh-iaas/prod/<%= repo_name %>
-gpgkey=https://iaas-repo.uio.no/uh-iaas/prod/<%= repo_name %>/RPM-GPG-KEY-puppet
+baseurl=https://iaas-repo.uio.no/uh-iaas/<%= environment %>/<%= repo_name %>
+gpgkey=https://iaas-repo.uio.no/uh-iaas/<%= environment %>/<%= repo_name %>/RPM-GPG-KEY-puppet
 enabled=1
 gpgcheck=1
 EOF
